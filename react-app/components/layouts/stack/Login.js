@@ -1,21 +1,37 @@
-import {View,Text,StyleSheet, Alert } from 'react-native';
+import {View,Text,StyleSheet } from 'react-native';
 import { AuthContext } from '../../../Context/AuthContext';
 import { useContext, useState } from 'react';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import {style} from '../../../assets/style/stylesheet.js'
+import axios from "axios"; 
 
-export default function Login() {
-  const [AccessToken, setAccessToken,skipintro,setskipintro] = useContext(AuthContext)
+export default function Login({ navigation }) {
+  const [AccessToken,setAccessToken,skipintro,setskipintro,user, setuser] = useContext(AuthContext)
   const [email, setemail] = useState()
   const [password, setpassword] = useState()
+  
    const Login = ()=>{
+    
+    axios.post('http://127.0.0.1:8000/api/user',{
+        email : email,
+        password : password
+    })
+    .then(function (response) {
+        if(response.data.length > 0){
+            setuser(response.data[0])
+            setAccessToken(response.data[0].id)
+        }
+        else{
+            setAccessToken(null)
+        }
+    })
+  .catch(function (error) {
     setAccessToken(null)
-    if(email === 'johnrey.soler@lafilgroup.com' && password === 'password'){
-        setAccessToken('testing')
-    }
-    else{
-        Alert.alert('Invalid Credentials','Incorrect email or password. Try again')
-    }
+  })
+  }
+
+  const Signup = ()=>{
+    navigation.navigate('SignUp')
   }
     return (
         <View style={style.container}>
@@ -30,9 +46,9 @@ export default function Login() {
                 </View>
                 
                 <View style={{marginBottom:15}}>
-                <TouchableOpacity>
+                {/* <TouchableOpacity>
                     <Text style={[style.asflexend,style.textprimary,style.tdunderline]}>Forgot Password?</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 </View>
                 <TouchableOpacity style={[style.btnprimary,style.borderRadius]} onPress={Login}>
                     <Text style={[style.textlight,style.textcenter]}>Login</Text>
@@ -40,7 +56,7 @@ export default function Login() {
                 <View style={{marginVertical:20}}>
                     <View style={[style.ascenter,style.fdrow]}>
                         <Text>Don't have account? </Text>
-                        <TouchableOpacity><Text style={style.textprimary}>create a new account</Text></TouchableOpacity>
+                        <TouchableOpacity onPress={Signup}><Text style={style.textprimary}>create a new account</Text></TouchableOpacity>
                     </View>
                 </View>
             </View>

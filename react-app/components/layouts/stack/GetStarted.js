@@ -21,7 +21,7 @@ export default function GetStarted({ navigation }) {
                 </Text>
                 <TouchableOpacity style={[style.btnprimary,style.borderRadius,style.phorizontal4]} 
                 onPress={Login}>
-                <Text style={[style.textlight]}>GetStarted</Text>
+                <Text style={[style.textlight]}>Get Started</Text>
                 </TouchableOpacity>
           </View>
         </View>

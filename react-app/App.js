@@ -6,18 +6,22 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import Feed from "./components/layouts/drawer/Feed";
 import Login from "./components/layouts/stack/Login";
-import Logout from "./components/layouts/drawer/Logout";
+import CustomDrawerContent from "./components/layouts/drawer/CustomDrawerContent";
 import GetStarted from "./components/layouts/stack/GetStarted";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Home from "./components/layouts/drawer/Home";
+import SignUp from "./components/layouts/stack/SignUp";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 export default function App() {
+  const [skipintro, setskipintro] = useState(true);
   const [AccessToken, setAccessToken] = useState(null);
-  const [skipintro, setskipintro] = useState(false);
+  const [user, setuser] = useState([]);
 
   return (
-    <AuthContext.Provider value={[AccessToken, setAccessToken,skipintro,setskipintro]}>
+    <AuthContext.Provider value={[AccessToken,setAccessToken,skipintro,setskipintro,user, setuser]}>
       <NavigationContainer>
         {AccessToken !== null ? <AppDrawer/> : <AppStack/>}
       </NavigationContainer>
@@ -26,11 +30,12 @@ export default function App() {
 }
 
 function AppStack() {
-  const [AccessToken, setAccessToken,skipintro] = useContext(AuthContext)
+  const [AccessToken,setAccessToken,skipintro,setskipintro,user, setuser] = useContext(AuthContext)
   if(skipintro){
     return (
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="SignUp" component={SignUp} />
       </Stack.Navigator>
     );
   }
@@ -38,6 +43,7 @@ function AppStack() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="GetStarted" component={GetStarted} />
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="SignUp" component={SignUp} />
     </Stack.Navigator>
   );
 
@@ -47,8 +53,8 @@ function AppStack() {
 function AppDrawer() {
   return (
     <Drawer.Navigator //screenOptions={{ headerShown: false }}
-    drawerContent={(props) => <Logout {...props} />}>
-      <Drawer.Screen name="Feed" component={Feed} />
+    drawerContent={(props) => <CustomDrawerContent {...props} />}>
+      <Drawer.Screen name="Home" component={Home} />
     </Drawer.Navigator>
   );
 }
