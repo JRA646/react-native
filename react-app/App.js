@@ -16,7 +16,7 @@ const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 export default function App() {
-  const [skipintro, setskipintro] = useState(true);
+  const [skipintro, setskipintro] = useState(false);
   const [AccessToken, setAccessToken] = useState(null);
   const [user, setuser] = useState([]);
 

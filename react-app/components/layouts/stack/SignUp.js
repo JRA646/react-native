@@ -1,4 +1,4 @@
-import {View,Text,StyleSheet } from 'react-native';
+import {View,Text,StyleSheet, Alert } from 'react-native';
 import { AuthContext } from '../../../Context/AuthContext';
 import { useContext, useState } from 'react';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
@@ -12,19 +12,24 @@ export default function SignUp({ navigation }) {
     const [password, setpassword] = useState()
     const [Confirmedpassword, setConfirmedpassword] = useState()
     const CreateAccount = () =>{
-        axios.post('http://127.0.0.1:8000/api/user/store',{
-        email : email,
-        password : password,
-        name : name
-        })
-        .then(function (response) {
+        if(password !== Confirmedpassword){
+            Alert.alert('Password mismatch')
+        }
+        else{
+            axios.post('http://10.97.92.84:8000/api/user/store',{
+            email : email,
+            password : password,
+            name : name
+            })
+            .then(function (response) {
+                setAccessToken(null)
+                navigation.navigate('Login')
+            })
+            
+        .catch(function (error) {
             setAccessToken(null)
-            navigation.navigate('Login')
         })
-    .catch(function (error) {
-        setAccessToken(null)
-    })
-        
+    }
     }
 
     const Login = ()=> {
@@ -34,25 +39,25 @@ export default function SignUp({ navigation }) {
         <View style={style.container}>
             <View style={[style.w90]}>
                 <View style={[style.formcontrol,{marginBottom:20}]}>
-                    <Text style={[styles.inputlabel,style.bglight,styles.phorizontal1,style.asflexstart]}>Email</Text>
-                    <TextInput placeholder='Juan Dela Cruz' onChangeText={(value)=> setname(value)} style={[styles.phorizontal1,{outline: "none" }]}></TextInput>
+                    <Text style={[styles.inputlabel,style.bglight,styles.phorizontal1,style.asflexstart]}>Name</Text>
+                    <TextInput placeholder='Juan Dela Cruz' onChangeText={(value)=> setname(value)} style={[styles.phorizontal1]}></TextInput>
                 </View>
                 <View style={[style.formcontrol,{marginBottom:20}]}>
                     <Text style={[styles.inputlabel,style.bglight,styles.phorizontal1,style.asflexstart]}>Email</Text>
-                    <TextInput placeholder='example@email.com' onChangeText={(value)=> setemail(value)} style={[styles.phorizontal1,{outline: "none" }]}></TextInput>
+                    <TextInput placeholder='example@email.com' onChangeText={(value)=> setemail(value)} style={[styles.phorizontal1]}></TextInput>
                 </View>
 
                 <View style={[style.formcontrol,{marginBottom:20}]}>
                     <Text style={[styles.inputlabel,style.bglight,styles.phorizontal1,style.asflexstart]}>Password</Text>
-                    <TextInput placeholder='********' secureTextEntry={true} onChangeText={(value)=> setpassword(value)} style={[styles.phorizontal1,{outline: "none" }]}></TextInput>
+                    <TextInput placeholder='********' secureTextEntry={true} onChangeText={(value)=> setpassword(value)} style={[styles.phorizontal1]}></TextInput>
                 </View>
 
                 <View style={[style.formcontrol,{marginBottom:20}]}>
                     <Text style={[styles.inputlabel,style.bglight,styles.phorizontal1,style.asflexstart]}>Confirmed Password</Text>
-                    <TextInput placeholder='********' secureTextEntry={true} onChangeText={(value)=> setConfirmedpassword(value)} style={[styles.phorizontal1,{outline: "none" }]}></TextInput>
+                    <TextInput placeholder='********' secureTextEntry={true} onChangeText={(value)=> setConfirmedpassword(value)} style={[styles.phorizontal1]}></TextInput>
                 </View>
 
-                <TouchableOpacity style={[style.btnprimary,style.borderRadius]} onPress={CreateAccount} disabled = {password !== Confirmedpassword ? true:false}>
+                <TouchableOpacity style={[style.btnprimary,style.borderRadius]} onPress={CreateAccount}>
                     <Text style={[style.textlight,style.textcenter]}>Create account</Text>
                 </TouchableOpacity>
 
